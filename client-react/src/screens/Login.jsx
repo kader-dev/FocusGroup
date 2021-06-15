@@ -108,45 +108,11 @@ const Login = ({ history }) => {
       <div className='max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1'>
         <div className='lg:w-1/2 xl:w-5/12 p-6 sm:p-12'>
           <div className='mt-12 flex flex-col items-center'>
-            <h1 className='text-2xl xl:text-3xl font-extrabold'>
-              Sign In for Congar
-            </h1>
+
             <div className='w-full flex-1 mt-8 text-indigo-500'>
               <div className='flex flex-col items-center'>
-                <GoogleLogin
-                  clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
-                  onSuccess={responseGoogle}
-                  onFailure={responseGoogle}
-                  cookiePolicy={'single_host_origin'}
-                  render={renderProps => (
-                    <button
-                      onClick={renderProps.onClick}
-                      disabled={renderProps.disabled}
-                      className='w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline'
-                    >
-                      <div className=' p-2 rounded-full '>
-                        <i className='fab fa-google ' />
-                      </div>
-                      <span className='ml-4'>Sign In with Google</span>
-                    </button>
-                  )}
-                ></GoogleLogin>
-                <FacebookLogin
-                  appId={`${process.env.REACT_APP_FACEBOOK_CLIENT}`}
-                  autoLoad={false}
-                  callback={responseFacebook}
-                  render={renderProps => (
-                    <button
-                      onClick={renderProps.onClick}
-                      className='w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5'
-                    >
-                      <div className=' p-2 rounded-full '>
-                        <i className='fab fa-facebook' />
-                      </div>
-                      <span className='ml-4'>Sign In with Facebook</span>
-                    </button>
-                  )}
-                />
+
+
 
                 <a
                   className='w-full max-w-xs font-bold shadow-sm rounded-lg py-3
@@ -198,12 +164,7 @@ const Login = ({ history }) => {
             </div>
           </div>
         </div>
-        <div className='flex-1 bg-indigo-100 text-center hidden lg:flex'>
-          <div
-            className='m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat'
-            style={{ backgroundImage: `url(${authSvg})` }}
-          ></div>
-        </div>
+
       </div>
       ;
     </div>

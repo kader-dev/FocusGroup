@@ -72,7 +72,7 @@ const Register = () => {
         <div className='lg:w-1/2 xl:w-5/12 p-6 sm:p-12'>
           <div className='mt-12 flex flex-col items-center'>
             <h1 className='text-2xl xl:text-3xl font-extrabold'>
-              Sign Up for Congar
+              Sign Up
             </h1>
 
             <form
@@ -118,7 +118,7 @@ const Register = () => {
               </div>
               <div className='my-12 border-b text-center'>
                 <div className='leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2'>
-                  Or sign with email or social login
+                  Or sign with emailn
                 </div>
               </div>
               <div className='flex flex-col items-center'>
@@ -135,12 +135,7 @@ const Register = () => {
             </form>
           </div>
         </div>
-        <div className='flex-1 bg-indigo-100 text-center hidden lg:flex'>
-          <div
-            className='m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat'
-            style={{ backgroundImage: `url(${authSvg})` }}
-          ></div>
-        </div>
+
       </div>
       ;
     </div>

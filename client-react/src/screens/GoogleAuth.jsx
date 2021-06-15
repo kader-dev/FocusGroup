@@ -2,13 +2,13 @@ import React from 'react';
 import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 
-const Google = ({ informParent = f => f , clientId, apiUrl}) => {
+const Google = ({ informParent = f => f, clientId, apiUrl }) => {
   console.log(clientId);
   const responseGoogle = response => {
     console.log(response);
     axios({
       method: 'POST',
-      url: `${process.env.REACT_APP_API}/google-login`,
+      url: `http://localhost:5000/api/google-login`,
       data: { idToken: response.tokenId }
     })
       .then(response => {
@@ -23,7 +23,7 @@ const Google = ({ informParent = f => f , clientId, apiUrl}) => {
   return (
     <div className='pb-3'>
       <GoogleLogin
-        clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}
+        clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
         onSuccess={responseGoogle}
         onFailure={responseGoogle}
         render={renderProps => (

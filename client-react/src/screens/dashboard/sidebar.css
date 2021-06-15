@@ -1,0 +1,18 @@
+#profileImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #512da8;
+  font-size: 35px;
+  color: #fff;
+  text-align: center;
+  line-height: 150px;
+  margin: 20px 0;
+}
+
+.imgRound {
+  border-radius: 50%;
+}
+.MuiDrawer-paper {
+  height: 100vh !important;
+}
