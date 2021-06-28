@@ -5,9 +5,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { render } = require("ejs");
 const app = express();
+const socket = require("socket.io");
 const server = require("http").Server(app);
-const io = require("socket.io")(server);
 const { ExpressPeerServer } = require("peer");
+
+const groupCallHandler = require("./groupCallHandler");
 const peerServer = ExpressPeerServer(server, {
   debug: true,
 });
@@ -28,14 +30,158 @@ app.get("/", (req, res) => {
 app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
+let peers = [];
+let groupCallRooms = [];
 
+const broadcastEventTypes = {
+  ACTIVE_USERS: "ACTIVE_USERS",
+  GROUP_CALL_ROOMS: "GROUP_CALL_ROOMS",
+};
+groupCallHandler.createPeerServerListeners(peerServer);
+const io = socket(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 io.on("connection", (socket) => {
+  socket.emit("connection", null);
+  console.log("new user connected");
+  console.log(socket.id);
+
   socket.on("join-room", (roomId, userId) => {
     socket.join(roomId);
-    socket.broadcast.to(roomId).emit("user-connected", userId);
+    console.log(roomId);
+    socket.to(roomId).emit("user-connected", userId);
+    // messages
+    socket.on("message", (message) => {
+      //send message to the same room
+      io.to(roomId).emit("createMessage", message);
+    });
 
     socket.on("disconnect", () => {
-      socket.broadcast.to(roomId).emit("user-disconnected", userId);
+      socket.to(roomId).emit("user-disconnected", userId);
+    });
+  });
+  socket.on("register-new-user", (data) => {
+    peers.push({
+      username: data.username,
+      socketId: data.socketId,
+    });
+    console.log("registered new user");
+    console.log(peers);
+
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.ACTIVE_USERS,
+      activeUsers: peers,
+    });
+
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.GROUP_CALL_ROOMS,
+      groupCallRooms,
+    });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    peers = peers.filter((peer) => peer.socketId !== socket.id);
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.ACTIVE_USERS,
+      activeUsers: peers,
+    });
+
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.GROUP_CALL_ROOMS,
+      groupCallRooms,
+    });
+  });
+
+  // listeners related with direct call
+
+  socket.on("pre-offer", (data) => {
+    console.log("pre-offer handled");
+    io.to(data.callee.socketId).emit("pre-offer", {
+      callerUsername: data.caller.username,
+      callerSocketId: socket.id,
+    });
+  });
+
+  socket.on("pre-offer-answer", (data) => {
+    console.log("handling pre offer answer");
+    io.to(data.callerSocketId).emit("pre-offer-answer", {
+      answer: data.answer,
+    });
+  });
+
+  socket.on("webRTC-offer", (data) => {
+    console.log("handling webRTC offer");
+    io.to(data.calleeSocketId).emit("webRTC-offer", {
+      offer: data.offer,
+    });
+  });
+
+  socket.on("webRTC-answer", (data) => {
+    console.log("handling webRTC answer");
+    io.to(data.callerSocketId).emit("webRTC-answer", {
+      answer: data.answer,
+    });
+  });
+
+  socket.on("webRTC-candidate", (data) => {
+    console.log("handling ice candidate");
+    io.to(data.connectedUserSocketId).emit("webRTC-candidate", {
+      candidate: data.candidate,
+    });
+  });
+
+  socket.on("user-hanged-up", (data) => {
+    io.to(data.connectedUserSocketId).emit("user-hanged-up");
+  });
+
+  // listeners related with group call
+  socket.on("group-call-register", (data) => {
+    const roomId = uuidV4();
+    socket.join(roomId);
+
+    const newGroupCallRoom = {
+      peerId: data.peerId,
+      hostName: data.username,
+      socketId: socket.id,
+      roomId: roomId,
+    };
+
+    groupCallRooms.push(newGroupCallRoom);
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.GROUP_CALL_ROOMS,
+      groupCallRooms,
+    });
+  });
+
+  socket.on("group-call-join-request", (data) => {
+    io.to(data.roomId).emit("group-call-join-request", {
+      peerId: data.peerId,
+      streamId: data.streamId,
+    });
+
+    socket.join(data.roomId);
+  });
+
+  socket.on("group-call-user-left", (data) => {
+    socket.leave(data.roomId);
+
+    io.to(data.roomId).emit("group-call-user-left", {
+      streamId: data.streamId,
+    });
+  });
+
+  socket.on("group-call-closed-by-host", (data) => {
+    groupCallRooms = groupCallRooms.filter(
+      (room) => room.peerId !== data.peerId
+    );
+
+    io.sockets.emit("broadcast", {
+      event: broadcastEventTypes.GROUP_CALL_ROOMS,
+      groupCallRooms,
     });
   });
 });

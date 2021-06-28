@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
-import { signout } from './helpers/auth';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { useEffect } from 'react';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import Register from './screens/Register';
 import Login from './screens/Login';
 import ForgetPassword from './screens/ForgetPassword';
@@ -10,10 +8,15 @@ import Activate from './screens/Activate';
 import PrivateRoute from './Routes/PrivateRoute';
 import AdminRoute from './Routes/AdminRoute';
 import Admin from './screens/Admin';
-import Sidebar from "./screens/dashboard/Sidebar";
 import RoomList from './screens/dashboard/room/RoomList';
+import TheRoom from './screens/ChatRoom/TheRoom';
+import { connectWithWebSocket } from './utils/wssConnection/wssConnection';
+import WebRTCTEst from './utils/webRTC/webRTCTEst';
+import JoinRoom from './screens/ChatRoom/Components/JoinRoom';
 function App({ history }) {
-  const location = useLocation();
+  useEffect(() => {
+    connectWithWebSocket();
+  }, []);
   return (
     <div>
       <Switch>
@@ -44,6 +47,16 @@ function App({ history }) {
 
           exact component={RoomList}
         />
+        <Route
+          path="/room/:roomID"
+
+          exact component={TheRoom}
+        />
+        <Route
+          path="/join"
+
+          exact component={JoinRoom}
+        />
 
         <PrivateRoute path="/private" exact component={RoomList} />
         <AdminRoute path="/admin" exact component={Admin} />
@@ -54,4 +67,4 @@ function App({ history }) {
   );
 }
 
-export default App;
+export default withRouter(App);

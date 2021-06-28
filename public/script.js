@@ -1,10 +1,10 @@
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
-const myPeer = new Peer(undefined, {
-  path: "/peerjs",
-  host: "/",
-  port: "5000",
-});
+// const myPeer = new Peer(undefined, {
+//   path: "/peerjs",
+//   host: "/",
+//   port: "5000",
+// });
 let myVideoStream;
 const myVideo = document.createElement("video");
 myVideo.muted = true;
@@ -91,6 +91,19 @@ const muteUnmute = () => {
   }
 };
 
+const muteAll = () => {
+  for (let index = 0; index < videoGrid.children.length; index++) {
+    console.log(videoGrid.children[index].srcObject.getAudioTracks());
+    const enabled =
+      videoGrid.children[index].srcObject.getAudioTracks()[0].enabled;
+    if (enabled) {
+      //myVideoStream.getAudioTracks()[index].enabled = false;
+      videoGrid.children[index].srcObject.getAudioTracks()[0].enabled = false;
+      console.log(videoGrid.children[index].srcObject);
+    }
+  }
+};
+
 const playStop = () => {
   console.log("object");
   let enabled = myVideoStream.getVideoTracks()[0].enabled;
@@ -102,6 +115,21 @@ const playStop = () => {
     myVideoStream.getVideoTracks()[0].enabled = true;
   }
 };
+
+// const shareScreen = () => {
+//   navigator.mediaDevices.getDisplayMedia({
+//     video: {
+//       cursor: "always"
+//     },
+//     audio: {
+//       echoCancellation: true,
+//       noiseSuppression: true
+//     }
+//   }).then((stream) => {
+//     let videoTrack = stream.getVideoTracks()[0];
+//     let sender = currentP
+//   })
+// };
 
 const setMuteButton = () => {
   const html = `

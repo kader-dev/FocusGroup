@@ -61,7 +61,7 @@ export default function CreateRoomModal(props) {
             client: room.client,
             startDate: room.startDate,
             state: room.state,
-            link: "http://localhost:5000" + uuid(),
+            link: "http://localhost:5000/" + uuid(),
         }
         Axios.post(`http://localhost:5000/api/room/create`, data).then((res) => {
 
