@@ -5,6 +5,7 @@ import {
   callStates,
   setLocalCameraEnabled,
   setLocalMicrophoneEnabled,
+  setAllMuted,
 } from "../../../../store/actions/callActions";
 import * as webRTCGroupCallHandler from "../../../../utils/webRTC/webRTCGroupCallHandler";
 import GroupCallRoom from "../GroupCallRoom/GroupCallRoom";
@@ -64,6 +65,7 @@ const mapActionsToProps = (dispatch) => {
     setCameraEnabled: (enabled) => dispatch(setLocalCameraEnabled(enabled)),
     setMicrophoneEnabled: (enabled) =>
       dispatch(setLocalMicrophoneEnabled(enabled)),
+    setMuteAll: (enabled) => dispatch(setAllMuted(enabled)),
   };
 };
 
