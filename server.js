@@ -39,12 +39,21 @@ const broadcastEventTypes = {
 };
 groupCallHandler.createPeerServerListeners(peerServer);
 const io = socket(server, {
+  maxHttpBufferSize: 1e8,
+  pingTimeout: 60000,
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
   },
 });
 io.on("connection", (socket) => {
+  socket.on("poll", ({ question, votes }) => {
+    io.emit("poll", { question, votes });
+  });
+  socket.on("vote", ({ question, voteAnswer }) => {
+    io.emit("vote", { question, voteAnswer });
+  });
+
   socket.emit("connection", null);
   console.log("new user connected");
   console.log(socket.id);

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { callStates } from '../../store/actions/callActions'
 import './TheRoom.css'
 import DirectCall from './Components/DirectCall/DirectCall';
@@ -7,12 +7,30 @@ import GroupCallRoomsList from './Components/GroupCallRoomsList/GroupCallRoomsLi
 import * as webRTCHandler from '../../utils/webRTC/webRTCHandler';
 import * as webRTCGroupHandler from '../../utils/webRTC/webRTCGroupCallHandler';
 import store from '../../store/store';
+import io from 'socket.io-client'
+import PollComp from './Components/Poll/PollComponenet'
+const socket = io.connect('http://localhost:5000');
 function TheRoom() {
+    const [poll, setPoll] = useState({})
+    const [isPoll, setISPoll] = useState(false)
+    const [quest, setQues] = useState('');
+    const [answer, setAnswer] = useState([]);
+
+
     useEffect(() => {
         webRTCHandler.getLocalStream();
         webRTCGroupHandler.connectWithMyPeer();
 
     }, []);
+    useEffect(() => {
+        socket.on('poll', ({ question, votes }) => {
+            setQues(question);
+            setAnswer(votes);
+            setISPoll(true);
+            console.log("aaaa" + votes)
+        })
+    }, [])
+
     return (
         <div className='dashboard_container background_main_color'>
             <div className='dashboard_left_section'>
@@ -22,6 +40,7 @@ function TheRoom() {
             </div>
             <div className='dashboard_right_section background_secondary_color'>
                 <div className='dashboard_active_users_list'>
+                    {isPoll ? <PollComp question={quest} answer={answer} setAnswer={setAnswer} socket={socket} /> : ''}
 
                 </div>
 

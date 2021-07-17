@@ -13,6 +13,9 @@ import {
   switchForScreenSharingStream,
   hangUp,
 } from "../../../../utils/webRTC/webRTCHandler";
+import DropdownRender from "../adminDropdown/Dropdown";
+import Example from "../adminDropdown/Dropdown";
+import Dropdown from "../adminDropdown/Dropdown";
 
 const styles = {
   buttonContainer: {
@@ -96,16 +99,6 @@ const ConversationButtons = (props) => {
         )}
       </ConversationButton>
 
-      {!test ? (
-        <ConversationButton onClickHandler={handleMuteAll}>
-          <MdMic style={styles.icon} />
-        </ConversationButton>
-      ) : (
-        <ConversationButton onClickHandler={handleUnmuteAll}>
-          <MdCallEnd style={styles.icon} />
-        </ConversationButton>
-      )}
-
       {!groupCall && (
         <ConversationButton onClickHandler={handleHangUpButtonPressed}>
           <MdCallEnd style={styles.icon} />
@@ -127,6 +120,12 @@ const ConversationButtons = (props) => {
           )}
         </ConversationButton>
       )}
+      <ConversationButton>
+        <Dropdown
+          click={!test ? handleMuteAll : handleUnmuteAll}
+          changeText={test}
+        />
+      </ConversationButton>
     </div>
   );
 };

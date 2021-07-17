@@ -21,8 +21,10 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import { updateUser, isAuth, getCookie, signout } from "../../helpers/auth";
 import { ToastContainer, toast } from "react-toastify";
 import { mainListItems } from "./NavItem";
+import Tooltip from "@material-ui/core/Tooltip";
 import Axios from "axios";
 import "./sidebar.css";
+import { useHistory } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -116,11 +118,29 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  arrow: {
+    color: theme.palette.common.black,
+  },
+  tooltip: {
+    backgroundColor: theme.palette.common.black,
+  },
 }));
 
-export default function Dashboard({ history }) {
+function BootstrapTooltip(props) {
+  const classes = useStyles();
+
+  return <Tooltip arrow classes={classes} {...props} />;
+}
+export default function Dashboard() {
+  const history = useHistory();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -177,23 +197,6 @@ export default function Dashboard({ history }) {
 
   return (
     <div className={classes.root}>
-      {/* <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
       <Drawer
         variant="permanent"
         classes={{
@@ -202,10 +205,20 @@ export default function Dashboard({ history }) {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-          <img
-            className="imgRound"
-            src={createImageFromInitials(50, formData.name, "#000")}
-          />
+          <div className=" tooltip">
+            <BootstrapTooltip title="Sign out">
+              <img
+                className="imgRound "
+                src={createImageFromInitials(50, formData.name, "#000")}
+                onClick={() => {
+                  signout(() => {
+                    toast.error("Signout Successfully");
+                    history.push("/");
+                  });
+                }}
+              />
+            </BootstrapTooltip>
+          </div>
         </div>
         <Divider />
         <List>{mainListItems}</List>

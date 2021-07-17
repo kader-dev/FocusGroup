@@ -60,7 +60,6 @@ function App({ history }) {
 
         <PrivateRoute path="/private" exact component={RoomList} />
         <AdminRoute path="/admin" exact component={Admin} />
-        <Redirect to='/' />
 
       </Switch>
     </div>
