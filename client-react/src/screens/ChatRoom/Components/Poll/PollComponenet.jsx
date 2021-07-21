@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-
+import Timer from './Timer'
+import Axios from 'axios';
 import Poll from 'react-polls'
+import { useParams } from 'react-router-dom';
 const pollStyles1 = {
     questionSeparator: true,
     questionSeparatorWidth: 'question',
@@ -11,11 +13,11 @@ const pollStyles1 = {
 }
 
 function PollComponenet(props) {
-
+    const { roomID } = useParams();
     const [pollAnswers, setPollAnswers] = useState([])
     const [test, setTest] = useState(true)
+    const [duration, setDuration] = useState(props.timer)
 
-    const initialRender = useRef(false);
     useEffect(() => {
 
         if (props.answer) {
@@ -25,6 +27,22 @@ function PollComponenet(props) {
     }, [props.answer])
 
 
+    useEffect(() => {
+
+        console.log("duratiiionn " + duration);
+        if (duration == 1000) {
+
+            const newPoll = {
+                question: props.question,
+                room: roomID,
+                answers: props.answer
+            }
+            Axios.post(`http://localhost:5000/api/poll/create`, newPoll).then((res) => {
+
+                console.log(newPoll)
+            })
+        }
+    }, [duration])
     useEffect(() => {
 
         props.socket.on('vote', ({ question, voteAnswer }) => {
@@ -37,7 +55,7 @@ function PollComponenet(props) {
 
         })
 
-
+        console.log(props.timer)
 
     }, [])
 
@@ -57,6 +75,13 @@ function PollComponenet(props) {
                 <div>
                     {props.answer ?
                         <Poll question={props.question} answers={props.answer} onVote={voteAnswer => handleVote(voteAnswer, props.answer)} customStyles={pollStyles1} noStorage /> : ''}
+
+                    <Timer
+
+                        initialTime={props.timer}
+                        tickFrequency={1000}
+                        prog={setDuration}
+                    />
                 </div>
             </main>
 

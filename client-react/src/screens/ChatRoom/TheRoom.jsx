@@ -15,6 +15,7 @@ function TheRoom() {
     const [isPoll, setISPoll] = useState(false)
     const [quest, setQues] = useState('');
     const [answer, setAnswer] = useState([]);
+    const [timer, setTimer] = useState(0);
 
 
     useEffect(() => {
@@ -23,11 +24,12 @@ function TheRoom() {
 
     }, []);
     useEffect(() => {
-        socket.on('poll', ({ question, votes }) => {
+        socket.on('poll', ({ question, votes, progress }) => {
             setQues(question);
             setAnswer(votes);
+            console.log("ppp" + progress);
+            setTimer(progress);
             setISPoll(true);
-            console.log("aaaa" + votes)
         })
     }, [])
 
@@ -40,7 +42,7 @@ function TheRoom() {
             </div>
             <div className='dashboard_right_section background_secondary_color'>
                 <div className='dashboard_active_users_list'>
-                    {isPoll ? <PollComp question={quest} answer={answer} setAnswer={setAnswer} socket={socket} /> : ''}
+                    {isPoll ? <PollComp question={quest} answer={answer} setAnswer={setAnswer} socket={socket} timer={timer} /> : ''}
 
                 </div>
 

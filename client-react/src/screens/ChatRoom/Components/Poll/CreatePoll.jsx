@@ -24,7 +24,7 @@ function CreatePoll(props) {
     const [question, setquestion] = useState('')
     const [answers, setanswers] = useState([''])
     const [error, setError] = useState(false);
-
+    const [progress, setProgress] = useState(60000)
 
 
 
@@ -39,6 +39,9 @@ function CreatePoll(props) {
     const handleQuestion = (e) => {
         setquestion(e.target.value);
     }
+    const handleDurationChange = (e) => {
+        setProgress(e.target.value);
+    }
 
     const onSubmit = (e) => {
         if (question.length > 0 && answers.length > 1) {
@@ -48,13 +51,17 @@ function CreatePoll(props) {
                 votes.push({ option: a, votes: 0 })
             })
             console.log(votes)
-            socket.emit('poll', { question, votes });
+            console.log("progg" + progress);
+            socket.emit('poll', { question, votes, progress });
             setanswers(['', '']);
             setquestion('');
             props.handleClose();
+
+
         } else {
             setError(true);
         }
+
 
     }
     return (
@@ -78,7 +85,7 @@ function CreatePoll(props) {
 
                         </div> : ''}
 
-                        <div class="p-6 mt-8">
+                        <div class=" mt-8">
 
                             <form action="#">
                                 <div class="flex flex-col mb-2">
@@ -122,6 +129,29 @@ function CreatePoll(props) {
                                 </div>
 
                             </form>
+                        </div>
+                        <div class="flex items-center justify-between gap-4 w-full mt-8">
+                            <label class="text-gray-700" for="animals">
+                                Duration
+                                <select onChange={(e) => handleDurationChange(e)} class="block w-52 text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" name="duration">
+
+                                    <option value={60000} >
+                                        1 min
+                                    </option>
+                                    <option value={120000} >
+                                        2 min
+                                    </option>
+                                    <option value={240000}>
+                                        3 min
+                                    </option>
+                                    <option value={480000} >
+                                        4 min
+                                    </option>
+                                    <option value={960000} >
+                                        5 min
+                                    </option>
+                                </select>
+                            </label>
                         </div>
                         <div class="flex w-full my-4">
                             <button type="button" onClick={onSubmit} class="py-2 px-4  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
