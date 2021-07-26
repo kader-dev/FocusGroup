@@ -2,6 +2,7 @@ import { Menu, Transition } from '@headlessui/react'
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 import './Dropdown.css'
 import CreatePoll from '../Poll/CreatePoll'
+import { saveAs } from 'file-saver'
 const styles = {
     button: {
         width: '50px',
@@ -23,10 +24,40 @@ const styles = {
 };
 export default function Dropdown({ click, changeText }) {
     const [open, setOpen] = useState(false);
-
+    const [recording, setRecording] = useState(false);
     const handleClose = () => {
         setOpen(false);
         console.log("closed")
+    }
+
+
+    const start = async () => {
+        const data = [];
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+            video: {
+
+                mediaSource: "screen"
+            }
+        })
+
+        const mediaRecroder = new MediaRecorder(stream);
+        mediaRecroder.ondataavailable = (e) => {
+            data.push(e.data);
+            console.log(e.data);
+        }
+        mediaRecroder.start()
+        mediaRecroder.onstop = (e) => {
+
+            saveAs(URL.createObjectURL(new Blob(data, {
+                type: data[0].type,
+            })), `Video-${Date.now()}.webm`);
+            setRecording(false);
+        }
+    }
+
+    const startRec = () => {
+        start()
+        setRecording(true);
     }
     return (
         <div className="w-56 text-right fixed top-16" style={styles.button}>
@@ -47,7 +78,7 @@ export default function Dropdown({ click, changeText }) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                 >
-                    <Menu.Items className="absolute top-0 w-56 mt-2 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="absolute bottom-0 w-56 mt-2 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="px-1 py-1 ">
                             <Menu.Item>
                                 {({ active }) => (
@@ -56,17 +87,7 @@ export default function Dropdown({ click, changeText }) {
                                             } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                                         onClick={click}
                                     >
-                                        {active ? (
-                                            <EditActiveIcon
-                                                className="w-5 h-5 mr-2"
-                                                aria-hidden="true"
-                                            />
-                                        ) : (
-                                            <EditInactiveIcon
-                                                className="w-5 h-5 mr-2"
-                                                aria-hidden="true"
-                                            />
-                                        )}
+
                                         {!changeText ? "Mute all" : 'Unmute all'}
 
                                     </button>
@@ -79,18 +100,21 @@ export default function Dropdown({ click, changeText }) {
                                             } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                                         onClick={() => setOpen(true)}
                                     >
-                                        {active ? (
-                                            <EditActiveIcon
-                                                className="w-5 h-5 mr-2"
-                                                aria-hidden="true"
-                                            />
-                                        ) : (
-                                            <EditInactiveIcon
-                                                className="w-5 h-5 mr-2"
-                                                aria-hidden="true"
-                                            />
-                                        )}
+
                                         Create poll
+
+                                    </button>
+                                )}
+                            </Menu.Item>
+                            <Menu.Item>
+                                {({ active }) => (
+                                    <button
+                                        className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                            } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                        onClick={!recording ? startRec : ''}
+                                    >
+
+                                        {recording ? '' : 'Start recording'}
 
                                     </button>
                                 )}

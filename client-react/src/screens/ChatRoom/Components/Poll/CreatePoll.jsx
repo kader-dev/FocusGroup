@@ -52,6 +52,7 @@ function CreatePoll(props) {
             })
             console.log(votes)
             console.log("progg" + progress);
+            setProgress(60000)
             socket.emit('poll', { question, votes, progress });
             setanswers(['', '']);
             setquestion('');
@@ -76,8 +77,13 @@ function CreatePoll(props) {
             >
                 <Fade in={props.open}>
                     <div class="flex flex-col max-w-5xl px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
-                        <div class="self-center mb-2 text-xl font-light text-gray-800 sm:text-3xl dark:text-white">
+                        <div class="self-center mb-2 text-xl blue-700 sm:text-3xl dark:text-white">
                             Create a new Poll
+                        </div>
+                        <div class="  text-gray-800 px-4 py-2 rounded relative" >
+
+                            You can create a voting which will appear to each participant in this room in order to vote
+
                         </div>
                         {error ? <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
 
@@ -88,70 +94,73 @@ function CreatePoll(props) {
                         <div class=" mt-8">
 
                             <form action="#">
-                                <div class="flex flex-col mb-2">
-                                    <div class=" mb-2 text-xl font-light text-gray-800 sm:text-xl dark:text-white">
-                                        Question:
-                                    </div>
-                                    <div class="max-w-xl w-full mx-auto ">
+                                <div class="max-w-xl w-full mx-auto ">
+                                    <div class="flex flex-col mb-2">
+                                        <div class=" mb-2 text-xl font-light text-gray-800 sm:text-xl dark:text-white">
+                                            Question:
+                                        </div>
+
                                         <div class=" relative ">
                                             <input type="text" onChange={handleQuestion} id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="question" placeholder="Add the question" />
                                         </div>
+
+                                    </div>
+                                    <div class=" mb-2 text-xl font-light text-gray-800 sm:text-xl dark:text-white">
+                                        Answers: (minimum 2)
+                                    </div>
+
+                                    <div className="relative mb-2 ">
+
+                                        <input onChange={(e) => handleChange(e, 0)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder=" Option 1" />
+
+                                    </div>
+                                    <div className="relative mb-2">
+
+                                        <input onChange={(e) => handleChange(e, 1)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="Option 2" />
+
+                                    </div>
+                                    <div className="relative mb-2">
+
+                                        <input onChange={(e) => handleChange(e, 2)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="Option 3" />
+
+                                    </div>
+                                    <div className="relative mb-2">
+
+                                        <input onChange={(e) => handleChange(e, 3)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="Option 4" />
+
+                                    </div>
+                                    <div className="relative mb-2">
+
+                                        <input onChange={(e) => handleChange(e, 4)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="Option 5" />
+
                                     </div>
                                 </div>
-                                <div class=" mb-2 text-xl font-light text-gray-800 sm:text-xl dark:text-white">
-                                    Answers: (minimum 2)
-                                </div>
-
-                                <div className="relative mb-2 ">
-
-                                    <input onChange={(e) => handleChange(e, 0)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="New option" />
-
-                                </div>
-                                <div className="relative mb-2">
-
-                                    <input onChange={(e) => handleChange(e, 1)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="New option" />
-
-                                </div>
-                                <div className="relative mb-2">
-
-                                    <input onChange={(e) => handleChange(e, 2)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="New option" />
-
-                                </div>
-                                <div className="relative mb-2">
-
-                                    <input onChange={(e) => handleChange(e, 3)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="New option" />
-
-                                </div>
-                                <div className="relative mb-2">
-
-                                    <input onChange={(e) => handleChange(e, 4)} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="option" placeholder="New option" />
-
-                                </div>
-
                             </form>
                         </div>
                         <div class="flex items-center justify-between gap-4 w-full mt-8">
-                            <label class="text-gray-700" for="animals">
-                                Duration
-                                <select onChange={(e) => handleDurationChange(e)} class="block w-52 text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" name="duration">
+                            <div class="max-w-xl w-full mx-auto ">
+                                <label class="mb-2 text-xl font-light text-gray-800 sm:text-xl dark:text-white" for="animals">
+                                    Duration
+                                    <select onChange={(e) => handleDurationChange(e)} class="block w-52 text-l text-gray-800 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" name="duration">
 
-                                    <option value={60000} >
-                                        1 min
-                                    </option>
-                                    <option value={120000} >
-                                        2 min
-                                    </option>
-                                    <option value={240000}>
-                                        3 min
-                                    </option>
-                                    <option value={480000} >
-                                        4 min
-                                    </option>
-                                    <option value={960000} >
-                                        5 min
-                                    </option>
-                                </select>
-                            </label>
+                                        <option value={60000} >
+                                            1 min
+                                        </option>
+                                        <option value={120000} >
+                                            2 min
+                                        </option>
+                                        <option value={240000}>
+                                            3 min
+                                        </option>
+                                        <option value={480000} >
+                                            4 min
+                                        </option>
+                                        <option value={960000} >
+                                            5 min
+                                        </option>
+                                    </select>
+                                </label>
+                            </div>
                         </div>
                         <div class="flex w-full my-4">
                             <button type="button" onClick={onSubmit} class="py-2 px-4  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">

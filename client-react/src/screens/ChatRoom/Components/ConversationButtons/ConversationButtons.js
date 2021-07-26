@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdCallEnd,
   MdMic,
@@ -8,6 +8,7 @@ import {
   MdVideoLabel,
   MdCamera,
 } from "react-icons/md";
+import { FaHandPaper } from "react-icons/fa";
 import ConversationButton from "./ConversationButton";
 import {
   switchForScreenSharingStream,
@@ -16,6 +17,10 @@ import {
 import DropdownRender from "../adminDropdown/Dropdown";
 import Example from "../adminDropdown/Dropdown";
 import Dropdown from "../adminDropdown/Dropdown";
+import Axios from "axios";
+import { getCookie, isAuth, signout } from "../../../../helpers/auth";
+import { toast } from "react-toastify";
+import { io } from "socket.io-client";
 
 const styles = {
   buttonContainer: {
@@ -30,8 +35,8 @@ const styles = {
     fill: "#e6e5e8",
   },
 };
-
-const ConversationButtons = (props) => {
+const socket = io.connect("http://localhost:5000");
+const ConversationButtons = (props, { history }) => {
   const {
     localStream,
     localCameraEnabled,
@@ -43,6 +48,39 @@ const ConversationButtons = (props) => {
     groupCallStreams,
     setMuteAll,
   } = props;
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password1: "",
+    textChange: "Update",
+    role: "",
+  });
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  const loadProfile = () => {
+    const token = getCookie("token");
+    Axios.get(`http://localhost:5000/api/user/${isAuth()._id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        const { role, name, email } = res.data;
+        setFormData({ ...formData, role, name, email });
+      })
+      .catch((err) => {
+        toast.error(`Error To Your Information ${err.response.statusText}`);
+        if (err.response.status === 401) {
+          signout(() => {
+            history.push("/login");
+          });
+        }
+      });
+  };
 
   const [test, setTest] = useState(false);
   const handleMicButtonPressed = () => {
@@ -85,6 +123,11 @@ const ConversationButtons = (props) => {
     switchForScreenSharingStream();
   };
 
+  const handleRaiseHandPressed = () => {
+    const name = formData.name;
+    socket.emit("hand", { name });
+  };
+
   const handleHangUpButtonPressed = () => {
     hangUp();
   };
@@ -120,12 +163,23 @@ const ConversationButtons = (props) => {
           )}
         </ConversationButton>
       )}
-      <ConversationButton>
-        <Dropdown
-          click={!test ? handleMuteAll : handleUnmuteAll}
-          changeText={test}
-        />
-      </ConversationButton>
+      {formData.role != "admin" ? (
+        <ConversationButton onClickHandler={handleRaiseHandPressed}>
+          <FaHandPaper style={styles.icon} />
+        </ConversationButton>
+      ) : (
+        ""
+      )}
+      {formData.role == "admin" ? (
+        <ConversationButton>
+          <Dropdown
+            click={!test ? handleMuteAll : handleUnmuteAll}
+            changeText={test}
+          />
+        </ConversationButton>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

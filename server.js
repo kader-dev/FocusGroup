@@ -54,6 +54,10 @@ io.on("connection", (socket) => {
     io.emit("vote", { question, voteAnswer });
   });
 
+  socket.on("hand", ({ name }) => {
+    io.emit("hand", { name });
+  });
+
   socket.emit("connection", null);
   console.log("new user connected");
   console.log(socket.id);

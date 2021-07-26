@@ -31,7 +31,8 @@ function PollComponenet(props) {
 
         console.log("duratiiionn " + duration);
         if (duration == 1000) {
-
+            props.setISPoll(false);
+            props.setEnd(true);
             const newPoll = {
                 question: props.question,
                 room: roomID,

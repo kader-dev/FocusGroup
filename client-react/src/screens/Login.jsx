@@ -82,8 +82,8 @@ const Login = ({ history }) => {
               textChange: 'Submitted'
             });
             isAuth() && isAuth().role === 'admin'
-              ? history.push('/private')
-              : history.push('/join');
+              ? history.push('/private') : isAuth() && isAuth().role === 'client' ? history.push('/client')
+                : history.push('/join');
             toast.success(`Hey ${res.data.user.name}, Welcome back!`);
           });
         })

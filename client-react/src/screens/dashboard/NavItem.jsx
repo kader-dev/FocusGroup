@@ -22,7 +22,7 @@ export const mainListItems = (
         </ListItemIcon>
         <ListItemText primary="Rooms" />
       </ListItem>
-      <ListItem button>
+      <ListItem onClick={() => { history.push('/private/recordings') }} button>
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
