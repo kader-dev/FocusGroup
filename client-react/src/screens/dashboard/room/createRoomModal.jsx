@@ -5,6 +5,8 @@ import Fade from '@material-ui/core/Fade';
 import Axios from 'axios';
 import Multiselect from './Multiselect'
 import { uuid } from 'uuidv4';
+import Example from './ClientDropdown';
+import { toast, ToastContainer } from 'react-toastify';
 const useStyles = makeStyles(theme => ({
     modal: {
         display: 'flex',
@@ -31,6 +33,7 @@ export default function CreateRoomModal(props) {
         participants: [],
         client: "",
         startDate: "",
+        endDate: "",
         state: "",
         link: "",
     };
@@ -44,6 +47,7 @@ export default function CreateRoomModal(props) {
     const handleInputChange = event => {
         const { name, value } = event.target;
         setRoom({ ...room, [name]: value });
+        console.log(event.target.value + event.target.name)
     };
 
     const handleMulti = list => {
@@ -60,8 +64,9 @@ export default function CreateRoomModal(props) {
             participants: room.participants,
             client: room.client,
             startDate: room.startDate,
+            endDate: room.endDate,
             state: room.state,
-            link: "http://localhost:5000/" + uuid(),
+            link: uuid(),
         }
         Axios.post(`http://localhost:5000/api/room/create`, data).then((res) => {
 
@@ -72,16 +77,20 @@ export default function CreateRoomModal(props) {
                 participants: res.data.participants,
                 client: res.data.client,
                 startDate: res.data.startDate,
+                endDate: res.data.endDate,
                 state: res.data.state,
                 link: res.data.link,
             })
             setSubmitted(true)
             console.log(data)
         })
+
+        toast.success(`Room created successfully`);
     }
 
     return (
         <div >
+            <ToastContainer />
             <Modal
                 className={classes.modal}
                 open={props.open}
@@ -98,18 +107,42 @@ export default function CreateRoomModal(props) {
                             <form action="#">
                                 <div class="flex flex-col mb-2">
                                     <div class=" relative ">
-                                        <input value={room.name} onChange={handleInputChange} type="text" id="create-account-pseudo" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="name" placeholder="Name" />
+                                        <input value={room.name} onChange={handleInputChange} type="text" id="create-account-pseudo" class=" w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white" name="name" placeholder="Title" />
                                     </div>
                                 </div>
-                                <div class="flex gap-4 mb-2">
+                                <div class="flex flex-col mb-2">
                                     <div class=" relative ">
-                                        <input value={room.description} onChange={handleInputChange} type="text" id="create-account-first-name" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="description" placeholder="Description" />
-                                    </div>
-                                    <div class=" relative ">
-                                        <input value={room.duration} onChange={handleInputChange} type="text" id="create-account-last-name" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" name="duration" placeholder="Duration" />
+                                        <input value={room.description} onChange={handleInputChange} type="text" id="create-account-first-name" class=" w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white" name="description" placeholder="Description" />
                                     </div>
                                 </div>
+                                <div class="flex flex-col mb-2">
+                                    <div class=" relative ">
+                                        <label class="mb-2 text-m font-light text-gray-800 sm:text-l dark:text-white" for="animals">
+                                            Start date:
+
+                                            <input value={room.startDate} onChange={handleInputChange} type="datetime-local" id="create-account-first-name" class=" w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white" name="startDate" placeholder="Start date" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col mb-2">
+                                    <div class=" relative ">
+                                        <label class="mb-2 text-m font-light text-gray-800 sm:text-l dark:text-white" for="animals">
+                                            End date:
+                                            <input value={room.endDate} onChange={handleInputChange} type="datetime-local" id="create-account-first-name" class=" w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white" name="endDate" placeholder="End date" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col mb-2">
+                                    <div class=" relative ">
+                                        <div class=" relative ">
+                                            <Example setClient={handleInputChange} />
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <Multiselect list={room.participants} setParticipants={handleMulti} />
+
                                 <div class="flex w-full my-4">
                                     <button type="button" onClick={createRoom} class="py-2 px-4  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
                                         Create

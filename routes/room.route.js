@@ -7,9 +7,12 @@ const {
   readController,
   createController,
   getAllController,
+  testController,
 } = require("../controllers/room.controller");
+router.get("/room/het", testController);
 router.get("/room/all", getAllController);
 router.get("/room/:id", requireSignin, readController);
+
 router.post("/room/create", createController);
 
 module.exports = router;

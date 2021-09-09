@@ -1,5 +1,6 @@
 const Poll = require("../models/poll.model");
 const Answer = require("../models/answer.model");
+const mongoose = require("mongoose");
 
 exports.readController = (req, res) => {
   const userId = req.params.id;
@@ -15,10 +16,47 @@ exports.readController = (req, res) => {
   });
 };
 
-exports.getAllController = (req, res) => {
-  Room.find({}, function (err, users) {
-    res.json(users);
+var aa = [];
+var ss = [];
+
+exports.getVotesByRoom = (req, res) => {
+  const room = req.params.room;
+
+  Poll.find({ room: room })
+    .populate("answers")
+    .exec((err, votes) => {
+      if (err || !votes) {
+        return res.status(400).json({
+          error: "votes not found",
+        });
+      }
+
+      res.json(votes);
+    });
+};
+
+exports.getAnswersByVote = (id) => {
+  Answer.findOne({ _id: id }).exec((err, ans) => {
+    if (err || !ans) {
+      return res.status(400).json({
+        error: _id,
+      });
+    }
   });
+};
+
+exports.getAllController = (req, res) => {
+  Poll.find({})
+    .populate("answers")
+    .exec((err, votes) => {
+      if (err || !votes) {
+        return res.status(400).json({
+          error: "votes not found",
+        });
+      }
+
+      res.json(votes);
+    });
 };
 
 exports.createController = (req, res) => {

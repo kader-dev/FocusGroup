@@ -38,12 +38,7 @@ function RoomList() {
                         </h2>
                         <div class="text-end">
                             <form class="flex w-full max-w-sm space-x-3">
-                                <div class=" relative ">
-                                    <input type="text" id="&quot;form-subscribe-Filter" class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" placeholder="name" />
-                                </div>
-                                <button class="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200" type="submit">
-                                    Filter
-                                </button>
+
                                 <button onClick={() => { setOpen(true) }} type="button" class="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200" >
                                     +
                                 </button>
@@ -64,24 +59,25 @@ function RoomList() {
                                             Description
                                         </th>
                                         <th scope="col" class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal">
-                                            Duration
+                                            start date
                                         </th>
                                         <th scope="col" class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal">
-                                            start date
+                                            End date
                                         </th>
 
                                         <th scope="col" class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal">
                                             client
                                         </th>
                                         <th scope="col" class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal">
-                                            link
-                                        </th>
-                                        <th scope="col" class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal">
-                                            State
-                                        </th>
-                                        <th scope="col" class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal">
                                             participants
                                         </th>
+                                        <th scope="col" class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal">
+                                            actions
+                                        </th>
+                                        {/* <th scope="col" class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm uppercase font-normal">
+                                            State
+                                        </th> */}
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -98,14 +94,15 @@ function RoomList() {
                                                     {el.description}
                                                 </p>
                                             </td>
+
                                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                                 <p class="text-gray-900 whitespace-no-wrap">
-                                                    {el.duration}
+                                                    {el.startDate?.toString().slice(0, 10)} at {el.startDate?.toString().slice(11, 17)}
                                                 </p>
                                             </td>
                                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                                 <p class="text-gray-900 whitespace-no-wrap">
-                                                    {el.startDate}
+                                                    {el.endDate?.toString().slice(0, 10)} at {el.endDate?.toString().slice(11, 17)}
                                                 </p>
                                             </td>
                                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -113,12 +110,17 @@ function RoomList() {
                                                     {el.client}
                                                 </p>
                                             </td>
-                                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm ">
-                                                <p className="text-gray-900 whitespace-no-wrap " >
-                                                    {el.link}
+                                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                <p class="text-gray-900 whitespace-no-wrap">
+                                                    {el.participants.length}
                                                 </p>
                                             </td>
                                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                <button type="button" class="bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg" >
+                                                    <a href={"http://localhost:3000/room/" + el.link} target="_blank">Join</a>
+                                                </button>
+                                            </td>
+                                            {/* <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                                 <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                                                     <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full">
                                                     </span>
@@ -126,12 +128,8 @@ function RoomList() {
                                                         active
                                                     </span>
                                                 </span>
-                                            </td>
-                                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                                <p class="text-gray-900 whitespace-no-wrap">
-                                                    {el.participants.length}
-                                                </p>
-                                            </td>
+                                            </td> */}
+
                                         </tr>
                                     )) : ''}
                                 </tbody>

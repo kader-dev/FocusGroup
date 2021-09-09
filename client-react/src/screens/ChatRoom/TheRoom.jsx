@@ -97,7 +97,7 @@ function TheRoom({ history }) {
                         </div>
                     </div>
 
-                    {isPoll ? formData.role != 'admin' ? <PollComp question={quest} answer={answer} setAnswer={setAnswer} socket={socket} timer={timer} setISPoll={setISPoll} setEnd={setEndPoll} /> : <Hand name="You" text=" created a poll!" /> : ''}
+                    {isPoll ? <PollComp question={quest} answer={answer} setAnswer={setAnswer} socket={socket} timer={timer} setISPoll={setISPoll} setEnd={setEndPoll} /> : ''}
                     {isHand && formData.role == 'admin' ? <Hand name={name} icon={<FaHandPaper className="hand" />} text=" raised his hand!" /> : ''}
 
                 </div>

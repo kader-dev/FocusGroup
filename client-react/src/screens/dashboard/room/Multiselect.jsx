@@ -46,12 +46,12 @@ const Multiselect = ({ setParticipants }) => {
                 <div className="w-full">
                     <div className="flex flex-col items-center relative">
                         <div className="w-full ">
-                            <div className="my-2 p-1 flex border border-gray-200 bg-white rounded ">
+                            <div className=" w-full my-2 p-1 flex border border-gray-200 bg-white rounded ">
                                 <div className="flex flex-auto flex-wrap">
                                     {items ?
                                         selectedItems.map((tag, index) => {
                                             return (
-                                                <div key={index} className="flex justify-center items-center m-1 font-medium py-1 px-2 bg-white rounded-full text-teal-700 bg-teal-100 border border-teal-300 ">
+                                                <div key={index} className="flex justify-center items-center m-1 font-medium py-1 px-2 bg-white rounded-full text-teal-700 bg-blue-400 border border-teal-300 ">
                                                     <div className="text-xs font-normal leading-none max-w-full flex-initial">{tag}</div>
                                                     <div className="flex flex-auto flex-row-reverse">
                                                         <div onClick={() => removeTag(tag)}>
@@ -66,7 +66,7 @@ const Multiselect = ({ setParticipants }) => {
                                         })
                                         : ''}
                                     <div className="flex-1">
-                                        <input placeholder="" className="bg-transparent p-1 px-2 appearance-none outline-none h-full w-full text-gray-800" />
+                                        <input placeholder="Participants" className="bg-transparent p-1 px-2 appearance-none outline-none h-full w-full text-gray-800" />
                                     </div>
                                 </div>
                                 <div className="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200" onClick={toogleDropdown}>

@@ -7,14 +7,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store/store";
-
+import { SidebarProvider } from "./screens/dashboard/SidebarContext";
+import { Windmill } from "@windmill/react-ui";
 ReactDOM.render(
-  <div>
+  <SidebarProvider>
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <Windmill>
+          <App />
+        </Windmill>
       </Provider>
     </BrowserRouter>
-  </div>,
+  </SidebarProvider>,
   document.getElementById("root")
 );

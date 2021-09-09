@@ -3,6 +3,8 @@ import React, { Fragment, useEffect, useRef, useState } from 'react'
 import './Dropdown.css'
 import CreatePoll from '../Poll/CreatePoll'
 import { saveAs } from 'file-saver'
+import { useParams } from 'react-router-dom'
+import Axios from 'axios'
 const styles = {
     button: {
         width: '50px',
@@ -23,6 +25,7 @@ const styles = {
     }
 };
 export default function Dropdown({ click, changeText }) {
+    const { roomID } = useParams();
     const [open, setOpen] = useState(false);
     const [recording, setRecording] = useState(false);
     const handleClose = () => {
@@ -30,6 +33,17 @@ export default function Dropdown({ click, changeText }) {
         console.log("closed")
     }
 
+    const createRec = (name) => {
+        const data = {
+            link: "Z:/downloads/" + name,
+            room: roomID,
+            date: new Date()
+        }
+        Axios.post(`http://localhost:5000/api/rec/create`, data).then((res) => {
+
+            console.log(data)
+        })
+    }
 
     const start = async () => {
         const data = [];
@@ -47,11 +61,12 @@ export default function Dropdown({ click, changeText }) {
         }
         mediaRecroder.start()
         mediaRecroder.onstop = (e) => {
-
+            const name = `Video-${Date.now()}.webm`
             saveAs(URL.createObjectURL(new Blob(data, {
                 type: data[0].type,
-            })), `Video-${Date.now()}.webm`);
+            })), name);
             setRecording(false);
+            createRec(name);
         }
     }
 

@@ -14,6 +14,7 @@ import { connectWithWebSocket } from './utils/wssConnection/wssConnection';
 import WebRTCTEst from './utils/webRTC/webRTCTEst';
 import JoinRoom from './screens/ChatRoom/Components/JoinRoom';
 import RecordingsList from './screens/dashboard/recordings/RecordingsList';
+import Votes from './screens/dashboard/room/Votes/Votes';
 function App({ history }) {
   useEffect(() => {
     connectWithWebSocket();
@@ -52,6 +53,11 @@ function App({ history }) {
           path="/private/recordings"
 
           exact component={RecordingsList}
+        />
+        <Route
+          path="/private/votes"
+
+          exact component={Votes}
         />
         <Route
           path="/room/:roomID"

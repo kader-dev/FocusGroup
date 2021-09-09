@@ -1,4 +1,5 @@
 const User = require("../models/auth.model");
+const Room = require("../models/room.model");
 const expressJwt = require("express-jwt");
 
 exports.readController = (req, res) => {
@@ -12,6 +13,18 @@ exports.readController = (req, res) => {
     user.hashed_password = undefined;
     user.salt = undefined;
     res.json(user);
+  });
+};
+
+exports.getClientByRoom = (req, res) => {
+  const room = req.params.room;
+  User.find({ room: room }).exec((err, recs) => {
+    if (err || !recs) {
+      return res.status(400).json({
+        error: "recordings not found",
+      });
+    }
+    res.json(recs);
   });
 };
 

@@ -209,6 +209,7 @@ const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
 const roomRouter = require("./routes/room.route");
 const pollRouter = require("./routes/poll.route");
+const recordingRouter = require("./routes/recording.route");
 
 // Dev Logginf Middleware
 if (process.env.NODE_ENV === "development") {
@@ -225,6 +226,7 @@ app.use("/api", authRouter);
 app.use("/api", userRouter);
 app.use("/api", roomRouter);
 app.use("/api", pollRouter);
+app.use("/api", recordingRouter);
 
 app.use((req, res) => {
   res.status(404).json({

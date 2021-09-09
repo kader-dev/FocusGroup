@@ -17,7 +17,10 @@ const roomScheama = new mongoose.Schema({
     type: String,
   },
   startDate: {
-    type: Date,
+    type: String,
+  },
+  endDate: {
+    type: String,
   },
   client: {
     type: String,
